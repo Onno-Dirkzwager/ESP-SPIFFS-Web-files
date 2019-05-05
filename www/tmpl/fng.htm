@@ -1,0 +1,14 @@
+<div class="page_cnt">
+	<h1>HTTPS Fingerprint (SHA1)</h1></br>
+	<p>On the ESP8266 platform this fingerprint is used for https communication with IAS.</p>
+	<p>This was introduced with library version 1.0.6</br>From 2.1.0 on we also support root certificates and BearSSL certificate bundle's which will become the future default.</p>
+	<p>By changing the HTTPS_8266_TYPE define in the library config.h file you can use root certificates instead of the current fingerprint.</p>
+	<form id="form_fngSave" method="post" enctype="multipart/form-data">
+		<label for="f">Fingerprint</label>
+		<textarea name="f" id="f" maxlength="60" rows="5"></textarea>
+		<div class="clearem"></div>
+		<div class="btn_bar_cnt">
+			<button class="button" type="submit" disabled="disabled">Save</button>
+		</div>
+	</form>
+</div>
