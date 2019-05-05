@@ -7,36 +7,51 @@ document.addEventListener("page:Cert", function(){
 
 
 function pageCertLoader(){
-	// get template from server
-	tmplLoader("cert", "", function(response){
-		if(verbose){console.log("Loading:\tCert\t| Type: tmpl\t\t| Success");}
-		
-		// add template html to document div
-		document.getElementById("scrCert").innerHTML = response;
-		
-		// get certificate scan results
-		getCertScan();
-		
-		// add EventListener | trigger upload field with another button
-		document.getElementById("uploadCert").addEventListener("click", function(){
-			document.getElementById("f").click();
+	if(FNGPRINT != undefined){
+		tmplLoader("fng", "", function(response){
+			if(verbose){console.log("Loading:\tFng\t| Type: tmpl\t\t| Success");}
+			
+			// add template html to document div
+			document.getElementById("scrCert").innerHTML = response;
+			document.querySelector("#form_fngSave #f").value = FNGPRINT;
+			
+			var thisForm = document.getElementById("form_fngSave");
+			btnFormSubmit(thisForm, function(){
+				submitFngForm(thisForm);
+			});
 		});
-		
-		// add EventListener | submit certificate upload form
-		document.getElementById("f").addEventListener("change", function(event){
-			event.preventDefault();
-			submitCertForm();
-		});
-		
-		// add EventListener | get the root certificate for iotappstory.com and upload it to the esp
-		document.getElementById("getCertFromIAS").addEventListener("click", function(event){
-			event.preventDefault();
-			getCertFromIAS();
-		});
+	}else{
+		// get template from server
+		tmplLoader("cert", "", function(response){
+			if(verbose){console.log("Loading:\tCert\t| Type: tmpl\t\t| Success");}
+			
+			// add template html to document div
+			document.getElementById("scrCert").innerHTML = response;
+			
+			// get certificate scan results
+			getCertScan();
+			
+			// add EventListener | trigger upload field with another button
+			document.getElementById("uploadCert").addEventListener("click", function(){
+				document.getElementById("f").click();
+			});
+			
+			// add EventListener | submit certificate upload form
+			document.getElementById("f").addEventListener("change", function(event){
+				event.preventDefault();
+				submitCertForm();
+			});
+			
+			// add EventListener | get the root certificate for iotappstory.com and upload it to the esp
+			document.getElementById("getCertFromIAS").addEventListener("click", function(event){
+				event.preventDefault();
+				getCertFromIAS();
+			});
 
-	}, function(response){
-		if(verbose){console.log("Loading:\tCert\t| Type: tmpl\t\t| Failed");}
-	});
+		}, function(response){
+			if(verbose){console.log("Loading:\tCert\t| Type: tmpl\t\t| Failed");}
+		});
+	}
 }
 
 
@@ -54,6 +69,39 @@ function submitCertForm(){
 		
 		// upload form data and refresh certificate list
 		uploadCertToESP(formData);
+	}
+}
+
+// submit app settings form
+function submitFngForm(thisForm){
+	if(verbose){console.log("Saving fingerprint");}
+	
+	// generate form data from certificate upload form
+	var formData = new FormData(thisForm);
+
+	// check for validity
+	if(!thisForm[0].checkValidity()){
+			// not valid check form
+			alert("not valid");
+	}else{
+		// setup new ajax request
+		var xhttp = new XMLHttpRequest();
+		
+		// setup callbacks for success & failure
+		xhttp.onreadystatechange = function(){
+			if(this.readyState == 4 && this.status == 200){
+				cusAlert("Saved", "Fingerprint saved");
+			}
+			if(this.readyState == 4 && this.status != 200){
+				cusAlert("Error!", "Could not save your fingerprint. Try again!");
+			}
+		};
+		
+		// start ajax request
+		xhttp.open('POST', '/fp');
+
+		// send ajax request with parameters
+		xhttp.send(formData);
 	}
 }
 
