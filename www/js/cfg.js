@@ -50,7 +50,8 @@ boardInfo(function(){
 function boardInfo(callback){	
 	devComm("/i", "GET", "", "json", function(ret){
 		var data = JSON.parse(ret);
-
+		if(verbose){console.log("Received boardInfo json from device:");console.log(data);}
+		
 		SSID 				= [data.s1, data.s2, data.s3];
 		ARDUINO_BOARD 		= data.ab;
 		
