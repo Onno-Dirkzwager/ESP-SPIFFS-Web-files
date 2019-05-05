@@ -1,9 +1,9 @@
 <div class="page_cnt">
 	<h1>Root Certificates</h1></br>
-	<p>We use a root certificate on the ESP32 for setting up https communication with IAS.</p></br>
+	<p>We use a root certificate on ESP's for setting up https communication with IAS.</p></br>
 	<h2>Current certificates</h2></br>
 	<table class="scanRes certList"></table>	
-	<form name="form_certSave" action="/certupl" id="form_certSave" method="post" enctype="multipart/form-data">
+	<form id="form_certSave" method="post" enctype="multipart/form-data">
 		<input id="f" name="f" type="file" accept=".cer,.ar" multiple style="display:none;">
 		<label>new Certificate</label>
 		<br><br>
